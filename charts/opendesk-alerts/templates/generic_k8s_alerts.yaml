@@ -144,8 +144,9 @@ spec:
         {{- if $value.selectors.jobs }}
         - alert: Opendesk{{ $key | title }}JobFailed
           expr: >-
-            kube_job_failed{job="kube-state-metrics",namespace=~"{{ $ns }}",job_name=~"{{ $value.selectors.jobs }}"} 
-            > 0
+            sum by (job_name, namespace) (
+              kube_job_failed{job="kube-state-metrics",namespace=~"{{ $ns }}",job_name=~"{{ $value.selectors.jobs }}"} 
+            )> 0
           for: "{{ $.Values.config.global.alertsFiringFor }}"
           labels:
             opendeskComponent: {{ $key }}
