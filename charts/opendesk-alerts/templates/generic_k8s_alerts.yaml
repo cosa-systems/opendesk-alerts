@@ -1,0 +1,162 @@
+{{/*
+SPDX-FileCopyrightText: 2024 Zentrum für Digitale Souveränität der Öffentlichen Verwaltung (ZenDiS) GmbH
+SPDX-License-Identifier: Apache-2.0
+*/}}
+apiVersion: "monitoring.coreos.com/v1"
+kind: "PrometheusRule"
+metadata:
+  name: "{{ include "common.names.fullname" .}}-generic-k8s-health"
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+      {{- include "common.labels.standard" . | nindent 4 }}
+      {{- if .Values.additionalLabels }}
+      {{- include "common.tplvalues.render" ( dict "value" .Values.additionalLabels "context" . ) | nindent 4 }}
+      {{- end }}
+  annotations:
+    {{- if .Values.additionalAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.additionalAnnotations "context" . ) | nindent 4 }}
+    {{- end }}
+spec:
+  groups:
+    {{- range .Values.config | keys  }}
+    {{- $key := . }}
+    {{- $value := get $.Values.config $key  }}
+    {{- if $value.enable }}
+    
+    {{- $ns := $value.selectors.namespace | default $.Release.Namespace }}
+    
+    - name: "opendesk-{{ $key | lower }}"
+      rules:
+        {{- if $value.selectors.endpoints }}
+        - alert: Opendesk{{ $key | title }}ServiceUnready
+          expr: >-
+            sum by(endpoint) (kube_endpoint_address{namespace="{{ $ns }}", endpoint=~"{{ $value.selectors.endpoints }}", ready="true"})
+            / sum by(endpoint) (kube_endpoint_address{namespace="{{ $ns }}", endpoint=~"{{ $value.selectors.endpoints }}"})
+            < 1
+          for: "{{ $.Values.config.global.alertsFiringFor }}"
+          labels:
+            opendeskComponent: {{ $key }}
+            baseAlertname: OpendeskServiceUnready
+            {{- include "opendesk-alerts.alertLabels" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+          annotations:
+            summary: Service is degraded.
+            description: >-
+              {{`OpenDesk Service {{ $labels.endpoint }} (in namespace {{ $labels.namespace }}) has endpoints that are not ready. Only {{ $value | humanizePercentage }} are ready.`}}
+            {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+        {{- end }}
+
+        {{- if $value.selectors.pods }}
+        - alert: Opendesk{{ $key | title }}PodWaiting
+          expr: >-
+            sum by (namespace, pod, container, cluster, reason) (
+              kube_pod_container_status_waiting_reason{job="kube-state-metrics",namespace=~"{{ $ns }}",pod=~"{{ $value.selectors.pods }}"}
+            )
+            > 0
+          for: "{{ $.Values.config.global.alertsFiringFor }}"
+          labels:
+            opendeskComponent: {{ $key }}
+            baseAlertname: OpendeskPodWaiting
+            {{- include "opendesk-alerts.alertLabels" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+          annotations:
+            summary: Pod is waiting to run.
+            description: >-
+              {{`OpenDesk Pod {{ $labels.namespace }}/{{ $labels.pod }} ({{ $labels.container }}) is in waiting state (reason: "{{ $labels.reason }}").`}}
+            {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+
+        - alert: Opendesk{{ $key | title }}PodNotReady
+          expr: >-
+            sum by (namespace, pod, cluster) (
+                max by (namespace, pod, cluster) (
+                  kube_pod_status_phase{job="kube-state-metrics",namespace=~"{{ $ns }}",pod=~"{{ $value.selectors.pods }}",phase=~"Pending|Unknown|Failed"}
+                )
+              * on (namespace, pod, cluster) group_left (owner_kind)
+                topk by (namespace, pod, cluster) (
+                  1,
+                  max by (namespace, pod, owner_kind, cluster) (kube_pod_owner{owner_kind!="Job"})
+                )
+            )
+            > 0
+          for: "{{ $.Values.config.global.alertsFiringFor }}"
+          labels:
+            opendeskComponent: {{ $key }}
+            baseAlertname: OpendeskPodNotReady
+            {{- include "opendesk-alerts.alertLabels" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+          annotations:
+            summary: Pod is in a non-ready state.
+            description: >-
+              {{`OpenDesk Pod {{ $labels.namespace }}/{{ $labels.pod }} has been in a non-ready state for longer than 15 minutes.`}}
+            {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+
+        - alert: Opendesk{{ $key | title }}PodCpuSaturated
+          expr: >-
+            rate(container_cpu_usage_seconds_total{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!=""}[2m]) 
+            / on(container, pod, namespace) kube_pod_container_resource_requests{resource="cpu", pod=~"{{ $value.selectors.pods }}", namespace="{{ $ns }}"}
+            > 1
+          labels:
+            opendeskComponent: {{ $key }}
+            baseAlertname: OpendeskPodCpuSaturated
+            {{- include "opendesk-alerts.alertLabels" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+          annotations:
+            summary: Pod is using all requested CPU time
+            description: >-
+              {{`Pod {{ $labels.pod }} (in namespace {{ $labels.namespace }}) is using {{ $value | humanizePercentage }} of its requested CPU time`}}
+            {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+
+        - alert: Opendesk{{ $key | title }}PodMemoryFull
+          expr: >-
+            container_memory_working_set_bytes{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!="", container!="POD"}
+            / on(container, pod, namespace) kube_pod_container_resource_limits{resource="memory", pod=~"{{ $value.selectors.pods }}", namespace="{{ $ns }}"}
+            > 0.95
+          labels:
+            opendeskComponent: {{ $key }}
+            baseAlertname: OpendeskPodMemoryFull
+            {{- include "opendesk-alerts.alertLabels" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+          annotations:
+            summary: Pod memory is practically full
+            description: >-
+              {{`Pod {{ $labels.pod }} (in namespace {{ $labels.namespace }}) is using {{ $value | humanizePercentage }} of its allocated memory`}}
+            {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+        {{- end }}
+
+        {{- if $value.selectors.pvcs }}
+        - alert: Opendesk{{ $key | title }}VolumeFillingUp
+          expr: >-
+            (
+              kubelet_volume_stats_available_bytes{job="kubelet",metrics_path="/metrics",namespace=~"{{ $ns }}",persistentvolumeclaim=~"{{ $value.selectors.pvcs }}"}
+              /
+              kubelet_volume_stats_capacity_bytes{job="kubelet",metrics_path="/metrics",namespace=~"{{ $ns }}",persistentvolumeclaim=~"{{ $value.selectors.pvcs }}"}
+            )
+            < 0.03
+            and kubelet_volume_stats_used_bytes{job="kubelet",metrics_path="/metrics",namespace=~"{{ $ns }}",persistentvolumeclaim=~"{{ $value.selectors.pvcs }}"} > 0
+            unless on (cluster, namespace, persistentvolumeclaim) kube_persistentvolumeclaim_access_mode{access_mode="ReadOnlyMany"} == 1
+          for: "{{ $.Values.config.global.alertsFiringFor }}"
+          labels:
+            opendeskComponent: {{ $key }}
+            baseAlertname: OpendeskVolumeFillingUp
+            {{- include "opendesk-alerts.alertLabels" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+          annotations:
+            summary: PersistentVolume is filling up.
+            description: >-
+              {{`The PersistentVolume claimed by {{ $labels.persistentvolumeclaim }} in Namespace {{ $labels.namespace }} {{ with $labels.cluster -}} on Cluster {{ . }} {{- end }} is only {{ $value | humanizePercentage }} free.`}}
+            {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+        {{- end }}
+
+        {{- if $value.selectors.jobs }}
+        - alert: Opendesk{{ $key | title }}JobFailed
+          expr: >-
+            kube_job_failed{job="kube-state-metrics",namespace=~"{{ $ns }}",job_name=~"{{ $value.selectors.jobs }}"} 
+            > 0
+          for: "{{ $.Values.config.global.alertsFiringFor }}"
+          labels:
+            opendeskComponent: {{ $key }}
+            baseAlertname: OpendeskJobFailed
+            {{- include "opendesk-alerts.alertLabels" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+          annotations:
+            summary: Job failed to complete.
+            description: >-
+              {{`Job {{ $labels.namespace }}/{{ $labels.job_name }} failed to complete. Removing failed job after investigation should clear this alert.`}}
+            {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
+        {{- end }}
+    
+    {{- end }}
+    {{- end }}

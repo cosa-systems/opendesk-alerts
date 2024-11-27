@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2024 Zentrum für Digitale Souveränität der Öffentlichen Verwaltung (ZenDiS) GmbH
+# SPDX-License-Identifier: Apache-2.0
+---
+apiVersion: "v2"
+name: "opendesk-alerts"
+description: "A Helm chart for deploying prometheus alert rules related to openDesk"
+home: "https://zendis.de"
+type: "application"
+version: "0.1.0"
+annotations:
+  category: "Monitoring"
+  licenses: "Apache-2.0"
+dependencies:
+  - name: "common"
+    version: "^2.x.x"
+    repository: "oci://registry.opencode.de/bmi/opendesk/components/external/charts/bitnami-charts"
+sources:
+  - "https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-dashboards"
+

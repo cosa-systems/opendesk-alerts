@@ -12,8 +12,6 @@ Before you begin, ensure you have met the following requirements:
 
 - Kubernetes 1.21+
 - Helm 3.0.0+
-- Prometheus Operator
-- kube-state-metrics
 
 ## License
 
