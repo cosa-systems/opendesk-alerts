@@ -8,9 +8,6 @@ additionalAnnotations: {}
 additionalLabels: {}
 
 
-# TODO: Add endpoint filter to each service object
-
-
 config:
   global:
     # -- Additional custom annotations to add to all generated alerts
