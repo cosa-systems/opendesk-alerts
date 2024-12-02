@@ -16,6 +16,25 @@ config:
     additionalAlertLabels: {}
     # -- How long an alert query must return results in order for alerts to be considered firing
     alertsFiringFor: 15m
+
+  services:
+    # -- Enable alerts for shared opendesk services
+    enable: true
+    # -- Additional custom annotations to add to all shared opendesk services related alerts
+    additionalAlertAnnotations: {}
+    # -- Additional custom labels to add to all shared opendesk services related alerts
+    additionalAlertLabels: {}
+    selectors:
+      # -- Regex which identifies namespaces that contain shared opendesk services; defaults to this helm charts namespace
+      namespace: ~
+      # -- Regex which identifies pods belonging to shared opendesk services by name
+      pods: "clamav-.+|intercom-service-.+|mariadb-.+|memcached-.+|minio-.+|postfix-.+|postgresql-.+|redis-.+"
+      # -- Regex which identifies persistent volume claims belonging to shared opendesk services by name
+      pvcs: "clamav-.+|data-mariadb-.+|data-postgresql-.+|dovecot|minio|postfix"
+      # -- Regex which identifies jobs belonging to shared opendesk services by name
+      jobs: "mariadb-bootstrap|minio-provisioning|postgresql-bootstrap"
+      # -- Regex which identifies endpoints belonging to shared opendesk services by name
+      endpoints: "clamav-.+|intercom-service|mariadb|memcached|minio|postfix|postgresql|redis-.+"
   
   matrix:
     # -- Enable alerts for matrix/synapse
