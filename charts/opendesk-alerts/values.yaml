@@ -8,9 +8,6 @@ additionalAnnotations: {}
 additionalLabels: {}
 
 
-# TODO: Add endpoint filter to each service object
-
-
 config:
   global:
     # -- Additional custom annotations to add to all generated alerts
@@ -19,13 +16,32 @@ config:
     additionalAlertLabels: {}
     # -- How long an alert query must return results in order for alerts to be considered firing
     alertsFiringFor: 15m
+
+  services:
+    # -- Enable alerts for shared opendesk services
+    enable: true
+    # -- Additional custom annotations to add to all shared opendesk services related alerts
+    additionalAlertAnnotations: {}
+    # -- Additional custom labels to add to all shared opendesk services related alerts
+    additionalAlertLabels: {}
+    selectors:
+      # -- Regex which identifies namespaces that contain shared opendesk services; defaults to this helm charts namespace
+      namespace: ~
+      # -- Regex which identifies pods belonging to shared opendesk services by name
+      pods: "clamav-.+|intercom-service-.+|mariadb-.+|memcached-.+|minio-.+|postfix-.+|postgresql-.+|redis-.+"
+      # -- Regex which identifies persistent volume claims belonging to shared opendesk services by name
+      pvcs: "clamav-.+|data-mariadb-.+|data-postgresql-.+|dovecot|minio|postfix"
+      # -- Regex which identifies jobs belonging to shared opendesk services by name
+      jobs: "mariadb-bootstrap|minio-provisioning|postgresql-bootstrap"
+      # -- Regex which identifies endpoints belonging to shared opendesk services by name
+      endpoints: "clamav-.+|intercom-service|mariadb|memcached|minio|postfix|postgresql|redis-.+"
   
   matrix:
     # -- Enable alerts for matrix/synapse
     enable: true
     # -- Additional custom annotations to add to all matrix/synapse related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all matrix/synapse related labels
+    # -- Additional custom labels to add to all matrix/synapse related alerts
     additionalAlertLabels: {}
     selectors:
       # -- Namespace in which matrix/synapse is deployed; defaults to this helm charts namespace.
@@ -44,7 +60,7 @@ config:
     enable: true
     # -- Additional custom annotations to add to all diagrams/cryptpad related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all diagrams/cryptpad related labels
+    # -- Additional custom labels to add to all diagrams/cryptpad related alerts
     additionalAlertLabels: {}
     selectors:
       # -- Namespace in which diagrams/cryptpad is deployed; defaults to this helm charts namespace.
@@ -63,7 +79,7 @@ config:
     enable: true
     # -- Additional custom annotations to add to all nextcloud related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all nextcloud related labels
+    # -- Additional custom labels to add to all nextcloud related alerts
     additionalAlertLabels: {}
     selectors:
       # -- Namespace in which nextcloud is deployed; defaults to this helm charts namespace.
@@ -82,7 +98,7 @@ config:
     enable: true
     # -- Additional custom annotations to add to all OpenXChange related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all OpenXChange related labels
+    # -- Additional custom labels to add to all OpenXChange related alerts
     additionalAlertLabels: {}
     selectors:
       # -- Namespace in which OpenXChange is deployed; defaults to this helm charts namespace.
@@ -101,7 +117,7 @@ config:
     enable: true
     # -- Additional custom annotations to add to all xwiki related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all xwiki related labels
+    # -- Additional custom labels to add to all xwiki related alerts
     additionalAlertLabels: {}
     selectors:
       # -- Namespace in which xwiki is deployed; defaults to this helm charts namespace.
@@ -120,7 +136,7 @@ config:
     enable: true
     # -- Additional custom annotations to add to all nubus related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all nubus related labels
+    # -- Additional custom labels to add to all nubus related alerts
     additionalAlertLabels: {}
     selectors:
       # -- Namespace in which nubus is deployed; defaults to this helm charts namespace.
@@ -139,7 +155,7 @@ config:
     enable: true
     # -- Additional custom annotations to add to all OpenProject related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all OpenProject related labels
+    # -- Additional custom labels to add to all OpenProject related alerts
     additionalAlertLabels: {}
     selectors:
       # -- Namespace in which OpenProject is deployed; defaults to this helm charts namespace.
@@ -158,7 +174,7 @@ config:
     enable: true
     # -- Additional custom annotations to add to all jitsi related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all jitsi related labels
+    # -- Additional custom labels to add to all jitsi related alerts
     additionalAlertLabels: {}
     selectors:
       # -- Namespace in which jitsi is deployed; defaults to this helm charts namespace.
@@ -177,7 +193,7 @@ config:
     enable: true
     # -- Additional custom annotations to add to all collabora related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all collabora related labels
+    # -- Additional custom labels to add to all collabora related alerts
     additionalAlertLabels: {}
     selectors:
       # -- Namespace in which collabora is deployed; defaults to this helm charts namespace.
