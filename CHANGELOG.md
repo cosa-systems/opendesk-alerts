@@ -1,3 +1,17 @@
+# [1.1.0](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/compare/v1.0.0...v1.1.0) (2024-12-02)
+
+
+### Bug Fixes
+
+* Documentation of additionalAlertLabels ([b6ffd9a](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/commit/b6ffd9a395e0f459f2540a042a2027f91559215f))
+* Remove obsolete TODO from values.yaml ([a19ec16](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/commit/a19ec1671a065c24a022b23144b243a162c138d1))
+
+
+### Features
+
+* Add alerts for shared opendesk services ([5d0756a](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/commit/5d0756a9266dfb853e51a6eb68f69dc53616c014))
+* Reduce extraneous labels on generated alerts ([f476dad](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/commit/f476dad6eb7bd91e91d0b247a96b3662ca49acc3))
+
 # 1.0.0 (2024-11-27)
 
 

@@ -33,13 +33,13 @@ To install the chart with the release name `my-release`, you have two options:
 ### Install via Repository
 ```console
 helm repo add opendesk-alerts https://gitlab.opencode.de/api/v4/projects/3936/packages/helm/stable
-helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
+helm install my-release --version 1.1.0 opendesk-alerts/opendesk-alerts
 ```
 
 ### Install via OCI Registry
 ```console
 helm repo add opendesk-alerts oci://registry.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts
-helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
+helm install my-release --version 1.1.0 opendesk-alerts/opendesk-alerts
 ```
 
 ## Requirements
@@ -55,7 +55,7 @@ helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
 | additionalAnnotations | object | `{}` | Additional custom annotations to add to all deployed kubernetes objects |
 | additionalLabels | object | `{}` | Additional custom labels to add to all deployed kubernetes objects |
 | config.collabora.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all collabora related alerts |
-| config.collabora.additionalAlertLabels | object | `{}` | Additional custom labels to add to all collabora related labels |
+| config.collabora.additionalAlertLabels | object | `{}` | Additional custom labels to add to all collabora related alerts |
 | config.collabora.enable | bool | `true` | Enable alerts for collabora |
 | config.collabora.selectors.endpoints | string | `"collabora"` | Regex which identifies endpoints belonging to collabora by name |
 | config.collabora.selectors.jobs | string | `""` | Regex which identifies jobs belonging to collabora by name |
@@ -63,7 +63,7 @@ helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
 | config.collabora.selectors.pods | string | `"collabora-.+"` | Regex which identifies pods belonging to collabora by name |
 | config.collabora.selectors.pvcs | string | `""` | Regex which identifies persistent volume claims belonging to collabora by name |
 | config.diagrams.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all diagrams/cryptpad related alerts |
-| config.diagrams.additionalAlertLabels | object | `{}` | Additional custom labels to add to all diagrams/cryptpad related labels |
+| config.diagrams.additionalAlertLabels | object | `{}` | Additional custom labels to add to all diagrams/cryptpad related alerts |
 | config.diagrams.enable | bool | `true` | Enable alerts for diagrams/cryptpad |
 | config.diagrams.selectors.endpoints | string | `"cryptpad"` | Regex which identifies endpoints belonging to diagrams/cryptpad by name |
 | config.diagrams.selectors.jobs | string | `""` | Regex which identifies jobs belonging to diagrams/cryptpad by name |
@@ -74,7 +74,7 @@ helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
 | config.global.additionalAlertLabels | object | `{}` | Additional custom labels to add to all generated alerts |
 | config.global.alertsFiringFor | string | `"15m"` | How long an alert query must return results in order for alerts to be considered firing |
 | config.jitsi.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all jitsi related alerts |
-| config.jitsi.additionalAlertLabels | object | `{}` | Additional custom labels to add to all jitsi related labels |
+| config.jitsi.additionalAlertLabels | object | `{}` | Additional custom labels to add to all jitsi related alerts |
 | config.jitsi.enable | bool | `true` | Enable alerts for jitsi |
 | config.jitsi.selectors.endpoints | string | `"jitsi-.+"` | Regex which identifies endpoints belonging to jitsi by name |
 | config.jitsi.selectors.jobs | string | `"jitsi-opendesk-jitsi"` | Regex which identifies jobs belonging to jitsi by name |
@@ -82,7 +82,7 @@ helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
 | config.jitsi.selectors.pods | string | `"jitsi-.*|opendesk-jitsi-.*"` | Regex which identifies pods belonging to jitsi by name |
 | config.jitsi.selectors.pvcs | string | `"prosody-data-jitsi-.+"` | Regex which identifies persistent volume claims belonging to jitsi by name |
 | config.matrix.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all matrix/synapse related alerts |
-| config.matrix.additionalAlertLabels | object | `{}` | Additional custom labels to add to all matrix/synapse related labels |
+| config.matrix.additionalAlertLabels | object | `{}` | Additional custom labels to add to all matrix/synapse related alerts |
 | config.matrix.enable | bool | `true` | Enable alerts for matrix/synapse |
 | config.matrix.selectors.endpoints | string | `"matrix-.+|opendesk-element|opendesk-synapse.+"` | Regex which identifies endpoints belonging to matrix/synapse by name |
 | config.matrix.selectors.jobs | string | `"opendesk-matrix-.+|matrix-neodatefix-.+"` | Regex which identifies jobs belonging to matrix/synapse by name |
@@ -90,7 +90,7 @@ helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
 | config.matrix.selectors.pods | string | `"matrix-.+|opendesk-synapse-.+"` | Regex which identifies pods belonging to matrix/synapse by name |
 | config.matrix.selectors.pvcs | string | `"matrix-.+|media-opendesk-synapse-.+"` | Regex which identifies persistent volume claims belonging to matrix/synapse by name |
 | config.nextcloud.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all nextcloud related alerts |
-| config.nextcloud.additionalAlertLabels | object | `{}` | Additional custom labels to add to all nextcloud related labels |
+| config.nextcloud.additionalAlertLabels | object | `{}` | Additional custom labels to add to all nextcloud related alerts |
 | config.nextcloud.enable | bool | `true` | Enable alerts for nextcloud |
 | config.nextcloud.selectors.endpoints | string | `"minio|opendesk-nextcloud-aio"` | Regex which identifies endpoints belonging to nextcloud by name |
 | config.nextcloud.selectors.jobs | string | `"opendesk-nextcloud-.+"` | Regex which identifies jobs belonging to nextcloud by name |
@@ -98,7 +98,7 @@ helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
 | config.nextcloud.selectors.pods | string | `"opendesk-nextcloud-aio.*|open-xchange-nextcloud-.*"` | Regex which identifies pods belonging to nextcloud by name |
 | config.nextcloud.selectors.pvcs | string | `"minio"` | Regex which identifies persistent volume claims belonging to nextcloud by name |
 | config.nubus.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all nubus related alerts |
-| config.nubus.additionalAlertLabels | object | `{}` | Additional custom labels to add to all nubus related labels |
+| config.nubus.additionalAlertLabels | object | `{}` | Additional custom labels to add to all nubus related alerts |
 | config.nubus.enable | bool | `true` | Enable alerts for nubus |
 | config.nubus.selectors.endpoints | string | `"ums-.+"` | Regex which identifies endpoints belonging to nubus by name |
 | config.nubus.selectors.jobs | string | `"ums-.+|opendesk-keycloak-.+"` | Regex which identifies jobs belonging to nubus by name |
@@ -106,7 +106,7 @@ helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
 | config.nubus.selectors.pods | string | `"ums-.+"` | Regex which identifies pods belonging to nubus by name |
 | config.nubus.selectors.pvcs | string | `".+-ums-.+"` | Regex which identifies persistent volume claims belonging to nubus by name |
 | config.openProject.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all OpenProject related alerts |
-| config.openProject.additionalAlertLabels | object | `{}` | Additional custom labels to add to all OpenProject related labels |
+| config.openProject.additionalAlertLabels | object | `{}` | Additional custom labels to add to all OpenProject related alerts |
 | config.openProject.enable | bool | `true` | Enable alerts for OpenProject |
 | config.openProject.selectors.endpoints | string | `"openproject"` | Regex which identifies endpoints belonging to OpenProject by name |
 | config.openProject.selectors.jobs | string | `"opendesk-openproject-.+"` | Regex which identifies jobs belonging to OpenProject by name |
@@ -114,15 +114,23 @@ helm install my-release --version 1.0.0 opendesk-alerts/opendesk-alerts
 | config.openProject.selectors.pods | string | `"openproject-.+"` | Regex which identifies pods belonging to OpenProject by name |
 | config.openProject.selectors.pvcs | string | `"openproject-.+"` | Regex which identifies persistent volume claims belonging to OpenProject by name |
 | config.openXChange.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all OpenXChange related alerts |
-| config.openXChange.additionalAlertLabels | object | `{}` | Additional custom labels to add to all OpenXChange related labels |
+| config.openXChange.additionalAlertLabels | object | `{}` | Additional custom labels to add to all OpenXChange related alerts |
 | config.openXChange.enable | bool | `true` | Enable alerts for OpenXChange |
 | config.openXChange.selectors.endpoints | string | `"open-xchange-.+"` | Regex which identifies endpoints belonging to OpenXChange by name |
 | config.openXChange.selectors.jobs | string | `"opendesk-open-xchange-.+"` | Regex which identifies jobs belonging to OpenXChange by name |
 | config.openXChange.selectors.namespace | string | `""` | Namespace in which OpenXChange is deployed; defaults to this helm charts namespace. |
 | config.openXChange.selectors.pods | string | `"open-xchange.*|ox-connector.*|opendesk-open-xchange-.*"` | Regex which identifies pods belonging to OpenXChange by name |
 | config.openXChange.selectors.pvcs | string | `"ox-.+"` | Regex which identifies persistent volume claims belonging to OpenXChange by name |
+| config.services.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all shared opendesk services related alerts |
+| config.services.additionalAlertLabels | object | `{}` | Additional custom labels to add to all shared opendesk services related alerts |
+| config.services.enable | bool | `true` | Enable alerts for shared opendesk services |
+| config.services.selectors.endpoints | string | `"clamav-.+|intercom-service|mariadb|memcached|minio|postfix|postgresql|redis-.+"` | Regex which identifies endpoints belonging to shared opendesk services by name |
+| config.services.selectors.jobs | string | `"mariadb-bootstrap|minio-provisioning|postgresql-bootstrap"` | Regex which identifies jobs belonging to shared opendesk services by name |
+| config.services.selectors.namespace | string | `nil` | Regex which identifies namespaces that contain shared opendesk services; defaults to this helm charts namespace |
+| config.services.selectors.pods | string | `"clamav-.+|intercom-service-.+|mariadb-.+|memcached-.+|minio-.+|postfix-.+|postgresql-.+|redis-.+"` | Regex which identifies pods belonging to shared opendesk services by name |
+| config.services.selectors.pvcs | string | `"clamav-.+|data-mariadb-.+|data-postgresql-.+|dovecot|minio|postfix"` | Regex which identifies persistent volume claims belonging to shared opendesk services by name |
 | config.xwiki.additionalAlertAnnotations | object | `{}` | Additional custom annotations to add to all xwiki related alerts |
-| config.xwiki.additionalAlertLabels | object | `{}` | Additional custom labels to add to all xwiki related labels |
+| config.xwiki.additionalAlertLabels | object | `{}` | Additional custom labels to add to all xwiki related alerts |
 | config.xwiki.enable | bool | `true` | Enable alerts for xwiki |
 | config.xwiki.selectors.endpoints | string | `"xwiki"` | Regex which identifies endpoints belonging to xwiki by name |
 | config.xwiki.selectors.jobs | string | `""` | Regex which identifies jobs belonging to xwiki by name |
