@@ -33,13 +33,13 @@ To install the chart with the release name `my-release`, you have two options:
 ### Install via Repository
 ```console
 helm repo add opendesk-alerts https://gitlab.opencode.de/api/v4/projects/3936/packages/helm/stable
-helm install my-release --version 1.1.0 opendesk-alerts/opendesk-alerts
+helm install my-release --version 1.1.1 opendesk-alerts/opendesk-alerts
 ```
 
 ### Install via OCI Registry
 ```console
 helm repo add opendesk-alerts oci://registry.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts
-helm install my-release --version 1.1.0 opendesk-alerts/opendesk-alerts
+helm install my-release --version 1.1.1 opendesk-alerts/opendesk-alerts
 ```
 
 ## Requirements

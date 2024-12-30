@@ -1,3 +1,10 @@
+## [1.1.1](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/compare/v1.1.0...v1.1.1) (2024-12-30)
+
+
+### Bug Fixes
+
+* Sort keys to have deterministic results ([6f67e7c](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/commit/6f67e7c710a16cce4742bd634625a5ab1747b037))
+
 # [1.1.0](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/compare/v1.0.0...v1.1.0) (2024-12-02)
 
 
