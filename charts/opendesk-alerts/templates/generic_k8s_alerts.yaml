@@ -2,6 +2,7 @@
 SPDX-FileCopyrightText: 2024 Zentrum für Digitale Souveränität der Öffentlichen Verwaltung (ZenDiS) GmbH
 SPDX-License-Identifier: Apache-2.0
 */}}
+---
 apiVersion: "monitoring.coreos.com/v1"
 kind: "PrometheusRule"
 metadata:
@@ -18,13 +19,12 @@ metadata:
     {{- end }}
 spec:
   groups:
-    {{- range .Values.config | keys  }}
+{{- $keys := .Values.config | keys | sortAlpha -}}
+{{- range $keys -}}
     {{- $key := . }}
     {{- $value := get $.Values.config $key  }}
     {{- if $value.enable }}
-    
     {{- $ns := $value.selectors.namespace | default $.Release.Namespace }}
-    
     - name: "opendesk-{{ $key | lower }}"
       rules:
         {{- if $value.selectors.endpoints }}
@@ -89,7 +89,7 @@ spec:
 
         - alert: Opendesk{{ $key | title }}PodCpuSaturated
           expr: >-
-            rate(container_cpu_usage_seconds_total{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!=""}[2m]) 
+            rate(container_cpu_usage_seconds_total{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!=""}[2m])
             / on(container, pod, namespace) kube_pod_container_resource_requests{resource="cpu", pod=~"{{ $value.selectors.pods }}", namespace="{{ $ns }}"}
             > 1
           labels:
@@ -145,7 +145,7 @@ spec:
         - alert: Opendesk{{ $key | title }}JobFailed
           expr: >-
             sum by (job_name, namespace) (
-              kube_job_failed{job="kube-state-metrics",namespace=~"{{ $ns }}",job_name=~"{{ $value.selectors.jobs }}"} 
+              kube_job_failed{job="kube-state-metrics",namespace=~"{{ $ns }}",job_name=~"{{ $value.selectors.jobs }}"}
             )> 0
           for: "{{ $.Values.config.global.alertsFiringFor }}"
           labels:
@@ -158,6 +158,6 @@ spec:
               {{`Job {{ $labels.namespace }}/{{ $labels.job_name }} failed to complete. Removing failed job after investigation should clear this alert.`}}
             {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
         {{- end }}
-    
     {{- end }}
-    {{- end }}
+{{- end }}
+...
