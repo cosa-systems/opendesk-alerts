@@ -1,7 +1,5 @@
-{{/*
-SPDX-FileCopyrightText: 2024 Zentrum für Digitale Souveränität der Öffentlichen Verwaltung (ZenDiS) GmbH
-SPDX-License-Identifier: Apache-2.0
-*/}}
+# SPDX-FileCopyrightText: 2024-2025 Zentrum für Digitale Souveränität der Öffentlichen Verwaltung (ZenDiS) GmbH
+# SPDX-License-Identifier: Apache-2.0
 ---
 apiVersion: "monitoring.coreos.com/v1"
 kind: "PrometheusRule"
@@ -23,8 +21,8 @@ spec:
 {{- range $keys -}}
     {{- $key := . }}
     {{- $value := get $.Values.config $key  }}
-    {{- if $value.enable }}
-    {{- $ns := $value.selectors.namespace | default $.Release.Namespace }}
+    {{- if and $value.enabled (hasKey $value "selectors") }}
+    {{- $ns := $value.namespace | default $.Release.Namespace }}
     - name: "opendesk-{{ $key | lower }}"
       rules:
         {{- if $value.selectors.endpoints }}

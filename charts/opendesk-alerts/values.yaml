@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Zentrum für Digitale Souveränität der Öffentlichen Verwaltung (ZenDiS) GmbH
+# SPDX-FileCopyrightText: 2024-2025 Zentrum für Digitale Souveränität der Öffentlichen Verwaltung (ZenDiS) GmbH
 # SPDX-License-Identifier: Apache-2.0
 ---
 # -- Additional custom annotations to add to all deployed kubernetes objects
@@ -19,14 +19,15 @@ config:
 
   services:
     # -- Enable alerts for shared opendesk services
-    enable: true
+    enabled: true
     # -- Additional custom annotations to add to all shared opendesk services related alerts
     additionalAlertAnnotations: {}
     # -- Additional custom labels to add to all shared opendesk services related alerts
     additionalAlertLabels: {}
+    # -- Regex which identifies namespaces that contain shared opendesk services; defaults to this helm charts namespace
+    # -- Namespace in which shared opendesk services are deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Regex which identifies namespaces that contain shared opendesk services; defaults to this helm charts namespace
-      namespace: ~
       # -- Regex which identifies pods belonging to shared opendesk services by name
       pods: "clamav-.+|intercom-service-.+|mariadb-.+|memcached-.+|minio-.+|postfix-.+|postgresql-.+|redis-.+"
       # -- Regex which identifies persistent volume claims belonging to shared opendesk services by name
@@ -36,35 +37,35 @@ config:
       # -- Regex which identifies endpoints belonging to shared opendesk services by name
       endpoints: "clamav-.+|intercom-service|mariadb|memcached|minio|postfix|postgresql|redis-.+"
   
-  matrix:
-    # -- Enable alerts for matrix/synapse
-    enable: true
-    # -- Additional custom annotations to add to all matrix/synapse related alerts
+  element:
+    # -- Enable alerts for element/matrix/synapse
+    enabled: true
+    # -- Additional custom annotations to add to all element/matrix/synapse related alerts
     additionalAlertAnnotations: {}
-    # -- Additional custom labels to add to all matrix/synapse related alerts
+    # -- Additional custom labels to add to all element/matrix/synapse related alerts
     additionalAlertLabels: {}
+    # -- Namespace in which matrix/synapse is deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Namespace in which matrix/synapse is deployed; defaults to this helm charts namespace.
-      namespace: ""
-      # -- Regex which identifies pods belonging to matrix/synapse by name
+      # -- Regex which identifies pods belonging to element/matrix/synapse by name
       pods: "matrix-.+|opendesk-synapse-.+"
-      # -- Regex which identifies persistent volume claims belonging to matrix/synapse by name
+      # -- Regex which identifies persistent volume claims belonging to element/matrix/synapse by name
       pvcs: "matrix-.+|media-opendesk-synapse-.+"
-      # -- Regex which identifies jobs belonging to matrix/synapse by name
+      # -- Regex which identifies jobs belonging to element/matrix/synapse by name
       jobs: "opendesk-matrix-.+|matrix-neodatefix-.+"
-      # -- Regex which identifies endpoints belonging to matrix/synapse by name
+      # -- Regex which identifies endpoints belonging to element/matrix/synapse by name
       endpoints: "matrix-.+|opendesk-element|opendesk-synapse.+"
 
-  diagrams:
+  cryptpad:
     # -- Enable alerts for diagrams/cryptpad
-    enable: true
+    enabled: true
     # -- Additional custom annotations to add to all diagrams/cryptpad related alerts
     additionalAlertAnnotations: {}
     # -- Additional custom labels to add to all diagrams/cryptpad related alerts
     additionalAlertLabels: {}
+    # -- Namespace in which diagrams/cryptpad is deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Namespace in which diagrams/cryptpad is deployed; defaults to this helm charts namespace.
-      namespace: ""
       # -- Regex which identifies pods belonging to diagrams/cryptpad by name
       pods: "cryptpad-.+"
       # -- Regex which identifies persistent volume claims belonging to diagrams/cryptpad by name
@@ -76,14 +77,14 @@ config:
 
   nextcloud:
     # -- Enable alerts for nextcloud
-    enable: true
+    enabled: true
     # -- Additional custom annotations to add to all nextcloud related alerts
     additionalAlertAnnotations: {}
     # -- Additional custom labels to add to all nextcloud related alerts
     additionalAlertLabels: {}
+    # -- Namespace in which nextcloud is deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Namespace in which nextcloud is deployed; defaults to this helm charts namespace.
-      namespace: ""
       # -- Regex which identifies pods belonging to nextcloud by name
       pods: "opendesk-nextcloud-aio.*|open-xchange-nextcloud-.*"
       # -- Regex which identifies persistent volume claims belonging to nextcloud by name
@@ -93,16 +94,16 @@ config:
       # -- Regex which identifies endpoints belonging to nextcloud by name
       endpoints: "minio|opendesk-nextcloud-aio"
 
-  openXChange:
+  oxAppSuite:
     # -- Enable alerts for OpenXChange
-    enable: true
+    enabled: true
     # -- Additional custom annotations to add to all OpenXChange related alerts
     additionalAlertAnnotations: {}
     # -- Additional custom labels to add to all OpenXChange related alerts
     additionalAlertLabels: {}
+    # -- Namespace in which OpenXChange is deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Namespace in which OpenXChange is deployed; defaults to this helm charts namespace.
-      namespace: ""
       # -- Regex which identifies pods belonging to OpenXChange by name
       pods: "open-xchange.*|ox-connector.*|opendesk-open-xchange-.*"
       # -- Regex which identifies persistent volume claims belonging to OpenXChange by name
@@ -114,14 +115,14 @@ config:
 
   xwiki:
     # -- Enable alerts for xwiki
-    enable: true
+    enabled: true
     # -- Additional custom annotations to add to all xwiki related alerts
     additionalAlertAnnotations: {}
     # -- Additional custom labels to add to all xwiki related alerts
     additionalAlertLabels: {}
+    # -- Namespace in which xwiki is deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Namespace in which xwiki is deployed; defaults to this helm charts namespace.
-      namespace: ""
       # -- Regex which identifies pods belonging to xwiki by name
       pods: "xwiki-.+"
       # -- Regex which identifies persistent volume claims belonging to xwiki by name
@@ -133,14 +134,14 @@ config:
 
   nubus:
     # -- Enable alerts for nubus
-    enable: true
+    enabled: true
     # -- Additional custom annotations to add to all nubus related alerts
     additionalAlertAnnotations: {}
     # -- Additional custom labels to add to all nubus related alerts
     additionalAlertLabels: {}
+    # -- Namespace in which nubus is deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Namespace in which nubus is deployed; defaults to this helm charts namespace.
-      namespace: ""
       # -- Regex which identifies pods belonging to nubus by name
       pods: "ums-.+"
       # -- Regex which identifies persistent volume claims belonging to nubus by name
@@ -150,16 +151,16 @@ config:
       # -- Regex which identifies endpoints belonging to nubus by name
       endpoints: "ums-.+"
 
-  openProject:
+  openproject:
     # -- Enable alerts for OpenProject
-    enable: true
+    enabled: true
     # -- Additional custom annotations to add to all OpenProject related alerts
     additionalAlertAnnotations: {}
     # -- Additional custom labels to add to all OpenProject related alerts
     additionalAlertLabels: {}
+    # -- Namespace in which OpenProject is deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Namespace in which OpenProject is deployed; defaults to this helm charts namespace.
-      namespace: ""
       # -- Regex which identifies pods belonging to OpenProject by name
       pods: "openproject-.+"
       # -- Regex which identifies persistent volume claims belonging to OpenProject by name
@@ -171,14 +172,14 @@ config:
 
   jitsi:
     # -- Enable alerts for jitsi
-    enable: true
+    enabled: true
     # -- Additional custom annotations to add to all jitsi related alerts
     additionalAlertAnnotations: {}
     # -- Additional custom labels to add to all jitsi related alerts
     additionalAlertLabels: {}
+    # -- Namespace in which jitsi is deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Namespace in which jitsi is deployed; defaults to this helm charts namespace.
-      namespace: ""
       # -- Regex which identifies pods belonging to jitsi by name
       pods: "jitsi-.*|opendesk-jitsi-.*"
       # -- Regex which identifies persistent volume claims belonging to jitsi by name
@@ -190,14 +191,14 @@ config:
 
   collabora:
     # -- Enable alerts for collabora
-    enable: true
+    enabled: true
     # -- Additional custom annotations to add to all collabora related alerts
     additionalAlertAnnotations: {}
     # -- Additional custom labels to add to all collabora related alerts
     additionalAlertLabels: {}
+    # -- Namespace in which collabora is deployed; defaults to this helm charts namespace.
+    namespace: ""
     selectors:
-      # -- Namespace in which collabora is deployed; defaults to this helm charts namespace.
-      namespace: ""
       # -- Regex which identifies pods belonging to collabora by name
       pods: "collabora-.+"
       # -- Regex which identifies persistent volume claims belonging to collabora by name
