@@ -1,3 +1,10 @@
+## [1.1.2](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/compare/v1.1.1...v1.1.2) (2025-08-06)
+
+
+### Bug Fixes
+
+* Adjust helm templating to openDesk standard ([e12ac3b](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/commit/e12ac3bc1693764519154669e2674e983de5f059))
+
 ## [1.1.1](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/compare/v1.1.0...v1.1.1) (2024-12-30)
 
 
