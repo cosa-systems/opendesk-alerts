@@ -6,7 +6,7 @@ name: "opendesk-alerts"
 description: "A Helm chart for deploying prometheus alert rules related to openDesk"
 home: "https://zendis.de"
 type: "application"
-version: "1.1.2"
+version: "1.1.2-cosa.1"
 annotations:
   category: "Monitoring"
   licenses: "Apache-2.0"

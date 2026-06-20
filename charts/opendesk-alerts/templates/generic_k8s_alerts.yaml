@@ -86,18 +86,25 @@ spec:
             {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
 
         - alert: Opendesk{{ $key | title }}PodCpuSaturated
+          # Compare CPU usage against the *limit* (throttle risk), mirroring
+          # PodMemoryFull below. The original rule compared against the request,
+          # which flags every pod whose request is set conservatively (e.g. the
+          # nubus default cpu=10m) even when it is nowhere near its limit and not
+          # throttled — a permanent false positive. "Saturated" should mean
+          # approaching the cap.
           expr: >-
             rate(container_cpu_usage_seconds_total{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!=""}[2m])
-            / on(container, pod, namespace) kube_pod_container_resource_requests{resource="cpu", pod=~"{{ $value.selectors.pods }}", namespace="{{ $ns }}"}
-            > 1
+            / on(container, pod, namespace) kube_pod_container_resource_limits{resource="cpu", pod=~"{{ $value.selectors.pods }}", namespace="{{ $ns }}"}
+            > 0.9
+          for: "{{ $.Values.config.global.alertsFiringFor }}"
           labels:
             opendeskComponent: {{ $key }}
             baseAlertname: OpendeskPodCpuSaturated
             {{- include "opendesk-alerts.alertLabels" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
           annotations:
-            summary: Pod is using all requested CPU time
+            summary: Pod is approaching its CPU limit
             description: >-
-              {{`Pod {{ $labels.pod }} (in namespace {{ $labels.namespace }}) is using {{ $value | humanizePercentage }} of its requested CPU time`}}
+              {{`Pod {{ $labels.pod }} (in namespace {{ $labels.namespace }}) is using {{ $value | humanizePercentage }} of its CPU limit`}}
             {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
 
         - alert: Opendesk{{ $key | title }}PodMemoryFull
@@ -105,6 +112,7 @@ spec:
             container_memory_working_set_bytes{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!="", container!="POD"}
             / on(container, pod, namespace) kube_pod_container_resource_limits{resource="memory", pod=~"{{ $value.selectors.pods }}", namespace="{{ $ns }}"}
             > 0.95
+          for: "{{ $.Values.config.global.alertsFiringFor }}"
           labels:
             opendeskComponent: {{ $key }}
             baseAlertname: OpendeskPodMemoryFull
