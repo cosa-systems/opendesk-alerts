@@ -1,3 +1,10 @@
+## [1.1.3](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/compare/v1.1.2...v1.1.3) (2026-09-22)
+
+
+### Bug Fixes
+
+* **ci:** Migrate to new pipeline template ([17a1045](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/commit/17a10452f22521f26a810710abf118b3beea2cb3))
+
 ## [1.1.2](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/compare/v1.1.1...v1.1.2) (2025-08-06)
 
 
