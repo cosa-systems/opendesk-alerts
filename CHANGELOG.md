@@ -1,3 +1,10 @@
+## [1.1.5](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/compare/v1.1.4...v1.1.5) (2026-09-23)
+
+
+### Bug Fixes
+
+* **ci:** Force rebuild due to signing key rotation ([716a232](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/commit/716a23257ab9213a4d00c500508df42f4cc751db))
+
 ## [1.1.4](https://gitlab.opencode.de/bmi/opendesk/components/platform-development/charts/opendesk-alerts/compare/v1.1.3...v1.1.4) (2026-09-23)
 
 
