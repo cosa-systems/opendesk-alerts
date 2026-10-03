@@ -88,11 +88,16 @@ spec:
         {{- /*
         Usage is compared to the CPU limit, as PodMemoryFull compares to the
         memory limit: a pod with a low CPU request is not saturated while it
-        stays well below its limit and is not throttled.
+        stays well below its limit and is not throttled. The sum collapses the
+        two series cadvisor reports for one container while its image is
+        rolled out; without it the division fails with "duplicate time series
+        on the left side".
         */}}
         - alert: Opendesk{{ $key | title }}PodCpuSaturated
           expr: >-
-            rate(container_cpu_usage_seconds_total{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!=""}[2m])
+            sum by (container, pod, namespace) (
+              rate(container_cpu_usage_seconds_total{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!=""}[2m])
+            )
             / on(container, pod, namespace) kube_pod_container_resource_limits{resource="cpu", pod=~"{{ $value.selectors.pods }}", namespace="{{ $ns }}"}
             > 0.9
           for: "{{ $.Values.config.global.alertsFiringFor }}"
@@ -106,9 +111,15 @@ spec:
               {{`Pod {{ $labels.pod }} (in namespace {{ $labels.namespace }}) is using {{ $value | humanizePercentage }} of its CPU limit`}}
             {{- include "opendesk-alerts.alertAnnotations" ( dict "globalCtx" $ "localConfig" $value ) | nindent 12 }}
 
+        {{- /*
+        The sum collapses the two series cadvisor reports for one container
+        while its image is rolled out, as in PodCpuSaturated.
+        */}}
         - alert: Opendesk{{ $key | title }}PodMemoryFull
           expr: >-
-            container_memory_working_set_bytes{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!="", container!="POD"}
+            sum by (container, pod, namespace) (
+              container_memory_working_set_bytes{pod=~"{{ $value.selectors.pods }}", namespace=~"{{ $ns }}", container!="", container!="POD"}
+            )
             / on(container, pod, namespace) kube_pod_container_resource_limits{resource="memory", pod=~"{{ $value.selectors.pods }}", namespace="{{ $ns }}"}
             > 0.95
           for: "{{ $.Values.config.global.alertsFiringFor }}"
